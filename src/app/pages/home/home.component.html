@@ -1,0 +1,209 @@
+<section class="reveal hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="hero-label">
+        <span class="dot"></span> SOFTWARE THAT MOVES YOU FORWARD
+      </div>
+      <h1 *ngIf="settings['heroTitle']; else defaultTitle">
+        {{ settings["heroTitle"] }}
+      </h1>
+      <ng-template #defaultTitle
+        ><h1>
+          Smart Software<br />Solutions for<br /><em>Modern Businesses.</em>
+        </h1></ng-template
+      >
+      <p>
+        {{
+          settings["heroDescription"] ||
+            "From your first sale to your next big move, NABOO builds practical software that helps you work with clarity, move with confidence, and grow on your terms."
+        }}
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/products" class="btn btn-cream"
+          >Explore our products <span>↗</span></a
+        ><a routerLink="/request-demo" class="btn hero-outline"
+          >Request a demo <span>→</span></a
+        >
+      </div>
+      <div class="hero-note">
+        <span>✦</span> Built for real-world business challenges
+      </div>
+    </div>
+    <div
+      class="hero-visual"
+      aria-label="Illustrative business dashboard preview"
+    >
+      <div class="visual-back"></div>
+      <div class="dash-window">
+        <div class="dash-sidebar">
+          <img class="dash-logo" src="/icona.png" alt="NABOO icon" />
+          <div class="dash-navitem selected"></div>
+          <div class="dash-navitem"></div>
+          <div class="dash-navitem"></div>
+          <div class="dash-navitem short"></div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-head">
+            <strong>Overview</strong><span>● &nbsp;● &nbsp;●</span>
+          </div>
+          <div class="dash-intro">A clearer view of your business</div>
+          <div class="dash-cards">
+            <div>
+              <small>Sales overview</small><b>Dashboard</b>
+              <div class="mini-up">↗ Activity</div>
+            </div>
+            <div>
+              <small>Inventory</small><b>In focus</b>
+              <div class="mini-up">● In stock</div>
+            </div>
+          </div>
+          <div class="dash-chart">
+            <div class="chart-label">Business performance <span>•••</span></div>
+            <div class="chart-bars">
+              <i style="height: 37%"></i><i style="height: 59%"></i
+              ><i style="height: 45%"></i><i style="height: 75%"></i
+              ><i style="height: 62%"></i><i style="height: 91%"></i
+              ><i style="height: 72%"></i><i style="height: 100%"></i
+              ><i style="height: 82%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card">
+        <span>◈</span>
+        <div>One connected workspace<small>Everything in its place</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="trust-strip">
+  <div class="container">
+    <span>BUILT FOR THE WAY YOU WORK</span><span>Business management</span
+    ><span class="separator">•</span><span>Hospitality</span
+    ><span class="separator">•</span><span>Digital services</span>
+  </div>
+</div>
+<section class="reveal section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">WHAT WE DO</span>
+      <h2>Technology that makes work feel easier.</h2>
+      <p>
+        Thoughtful tools to simplify everyday operations and give you more room
+        to focus on what matters.
+      </p>
+    </div>
+    <div class="grid grid-4 benefits">
+      <article class="card" *ngFor="let benefit of benefits">
+        <span class="benefit-icon">{{ benefit.icon }}</span>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.text }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+<section class="reveal section section-soft">
+  <div class="container">
+    <div class="section-top">
+      <div>
+        <span class="eyebrow">OUR SOFTWARE</span>
+        <h2>Solutions built for your business.</h2>
+        <p>Useful, approachable technology for teams ready to do more.</p>
+      </div>
+      <a routerLink="/products" class="btn btn-outline">View all products ↗</a>
+    </div>
+    <div *ngIf="loading" class="loading">Loading products…</div>
+    <div *ngIf="error" class="status error">
+      {{ error }}
+      <button type="button" class="btn btn-small btn-outline" (click)="load()">
+        Retry
+      </button>
+    </div>
+    <div *ngIf="!loading && !error && !products.length" class="empty">
+      No products are available yet.
+    </div>
+    <div class="grid grid-2" *ngIf="!loading && !error">
+      <app-product-card *ngFor="let product of products" [product]="product" />
+    </div>
+  </div>
+</section>
+<section class="reveal section">
+  <div class="container">
+    <div class="section-top">
+      <div>
+        <span class="eyebrow">HOW WE CAN HELP</span>
+        <h2>More than software.</h2>
+        <p>Hands-on technology services to help bring your ideas to life.</p>
+      </div>
+      <a routerLink="/services" class="btn btn-outline">Explore services ↗</a>
+    </div>
+    <div class="grid grid-3">
+      <article
+        class="card service-card"
+        *ngFor="let service of services.slice(0, 6); let i = index"
+      >
+        <img
+          *ngIf="service.imageUrl; else serviceIcon"
+          [src]="service.imageUrl"
+          [alt]="service.name + ' illustration'"
+          loading="lazy"
+          style="
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 7px;
+            margin-bottom: 16px;
+          "
+        /><ng-template #serviceIcon
+          ><span class="service-icon">{{
+            ["◇", "▣", "↗", "☷", "✳", "◎"][i]
+          }}</span></ng-template
+        >
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.shortDescription }}</p>
+        <a class="arrow-link" routerLink="/contact">Let's talk ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+<section class="reveal why-section section-soft section">
+  <div class="container two-col">
+    <div>
+      <span class="eyebrow">THE NABOO APPROACH</span>
+      <h2>Technology designed around your business.</h2>
+      <p>
+        Great software should make your day simpler, not more complicated. We
+        focus on practical solutions that fit the way your team works today and
+        adapt as you grow.
+      </p>
+      <a routerLink="/about" class="btn btn-outline">Get to know us ↗</a>
+    </div>
+    <div class="why-list">
+      <div
+        *ngFor="
+          let point of [
+            'Practical business solutions',
+            'Customer-focused development',
+            'Reliable technology',
+            'Ongoing technical support',
+          ]
+        "
+      >
+        <span>✓</span>{{ point }}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="reveal cta-band">
+  <div class="container cta-inner">
+    <div>
+      <span class="eyebrow eyebrow-light">LET'S GET STARTED</span>
+      <h2>Ready to simplify your business?</h2>
+      <p>
+        See what the right software can do for your team. We'd love to hear what
+        you're working on.
+      </p>
+    </div>
+    <a routerLink="/contact" class="btn btn-cream">Get in touch ↗</a>
+  </div>
+</section>
