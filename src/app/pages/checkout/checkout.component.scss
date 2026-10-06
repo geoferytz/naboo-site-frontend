@@ -1,0 +1,35 @@
+:host{display:block}
+.checkout-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
+.full{grid-column:1/-1}
+.summary{display:grid;gap:10px;position:sticky;top:100px}
+.summary-line{display:flex;justify-content:space-between;gap:12px;margin:0}
+.summary-line small{color:var(--muted)}
+.summary-line.total{font-size:20px;font-weight:800;color:var(--wine);border-top:1px solid var(--line);padding-top:12px}
+.muted{color:var(--muted);font-size:13px}
+.link-button{background:none;border:0;padding:0;color:var(--wine);text-decoration:underline;cursor:pointer;font:inherit;font-size:13px}
+.methods{border:0;padding:0;margin:0;display:grid;gap:10px}
+.methods legend{font-weight:600;margin-bottom:8px}
+.method{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s}
+.method.selected{border-color:var(--wine);background:#5b121a0a}
+.method input{accent-color:var(--wine)}
+.method-badge{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:999px;color:#fff;background:#6b6b6b;min-width:72px;text-align:center}
+.method-badge[data-network="Vodacom"]{background:#e60000}
+.method-badge[data-network="Tigo"]{background:#1d4ed8}
+.method-badge[data-network="Airtel"]{background:#ed1c24}
+.method-badge[data-network="Halotel"]{background:#f57c00}
+.method-badge[data-network="Bank"]{background:var(--wine)}
+.honeypot{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.reference{font-size:28px;letter-spacing:.04em;margin:4px 0 0}
+.status-pill[data-status="PAID"]{background:#dcfce7;color:#166534}
+.status-pill[data-status="PAYMENT_SUBMITTED"]{background:#fef3c7;color:#92400e}
+.status-pill[data-status="CANCELLED"],.status-pill[data-status="REFUNDED"]{background:#fee2e2;color:#991b1b}
+.amount-due{font-size:17px}
+.steps{display:grid;gap:10px;padding-left:20px}
+.pay-to{font-size:18px;letter-spacing:.06em;color:var(--wine)}
+.bank{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0;padding:16px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.bank dt{color:var(--muted)}
+.bank dd{margin:0;font-weight:600}
+.lookup summary{cursor:pointer;font-weight:600}
+.lookup form{margin-top:16px}
+@media (max-width:900px){.checkout-layout{grid-template-columns:1fr}.summary{position:static}}

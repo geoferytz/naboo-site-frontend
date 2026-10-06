@@ -8,6 +8,8 @@ export const routes: Routes = [
   { path: 'products', title: 'Software Products | NABOO', loadComponent: () => import('./pages/catalogue/catalogue.component').then(m => m.CatalogueComponent) },
   { path: 'products/:slug', title: 'Product Details | NABOO', loadComponent: () => import('./pages/product/product.component').then(m => m.ProductComponent) },
   { path: 'pricing', title: 'Software Pricing | NABOO', loadComponent: () => import('./pages/pricing/pricing.component').then(m => m.PricingComponent) },
+  { path: 'cart', title: 'Your Cart | NABOO', loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent) },
+  { path: 'checkout', title: 'Checkout & Payment | NABOO', loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent) },
   { path: 'services', title: 'IT Services | NABOO', loadComponent: () => import('./pages/services/services.component').then(m => m.ServicesComponent) },
   { path: 'contact', title: 'Contact Us | NABOO', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
   { path: 'request-demo', title: 'Request a Demo | NABOO', loadComponent: () => import('./pages/demo/demo.component').then(m => m.DemoComponent) },

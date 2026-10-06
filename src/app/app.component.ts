@@ -4,10 +4,12 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { DOCUMENT } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { ApiService } from './core/api.service';
+import { CartService } from './core/cart.service';
 
 @Component({ selector: 'app-root', standalone: true, imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet], templateUrl: './app.component.html', styleUrl: './app.component.scss' })
 export class AppComponent implements OnInit {
   private api = inject(ApiService);
+  cart = inject(CartService);
   private router = inject(Router);
   private document = inject(DOCUMENT);
   private meta = inject(Meta);

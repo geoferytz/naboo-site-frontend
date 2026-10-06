@@ -1,0 +1,69 @@
+<section class="page-hero"><div class="container"><span class="eyebrow">SECURE CHECKOUT</span><h1>{{order ? 'Complete your payment.' : 'Almost there.'}}</h1><p>Pay by bank transfer or mobile money (Vodacom M-Pesa, Tigo Pesa, Airtel Money, HaloPesa). Your package is activated once our team verifies the payment.</p></div></section>
+<section class="section section-soft"><div class="container checkout-layout">
+  <div *ngIf="loading" class="loading">Loading checkout…</div>
+  <ng-container *ngIf="!loading">
+    <div *ngIf="error" class="status error" role="alert">{{error}}</div>
+    <div *ngIf="notice" class="status success" role="status">{{notice}}</div>
+
+    <!-- Step 1: details + payment method -->
+    <ng-container *ngIf="!order">
+      <div *ngIf="!cart.lines().length" class="empty full">Your cart is empty. <a routerLink="/pricing">Choose a package</a> first, or <button type="button" class="link-button" (click)="showLookup = true">find an existing order</button>.</div>
+      <div class="form-panel" *ngIf="cart.lines().length">
+        <h3>1. Your details</h3>
+        <form #form="ngForm" (ngSubmit)="placeOrder(form)" class="form-grid">
+          <label class="field">Full name *<input name="fullName" [(ngModel)]="model.fullName" required maxlength="160" autocomplete="name"></label>
+          <label class="field">Email address *<input name="email" type="email" [(ngModel)]="model.email" required email maxlength="254" autocomplete="email"></label>
+          <label class="field">Phone number *<input name="phone" type="tel" [(ngModel)]="model.phone" required maxlength="40" autocomplete="tel"></label>
+          <label class="field">Company<input name="company" [(ngModel)]="model.company" maxlength="160" autocomplete="organization"></label>
+          <fieldset class="field full methods"><legend>2. Payment method *</legend>
+            <label class="method" *ngFor="let m of methods" [class.selected]="model.paymentMethod === m.key"><input type="radio" name="paymentMethod" [value]="m.key" [(ngModel)]="model.paymentMethod" required><span class="method-badge" [attr.data-network]="m.network">{{m.network}}</span><span>{{m.label}}</span></label>
+          </fieldset>
+          <input class="honeypot" name="website" [(ngModel)]="model.website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="checkbox full"><input type="checkbox" name="consent" [(ngModel)]="model.consent" required> I agree to the <a routerLink="/terms">terms</a> and <a routerLink="/privacy-policy">privacy policy</a>. *</label>
+          <button class="btn btn-primary full" type="submit" [disabled]="submitting || form.invalid">{{submitting ? 'Creating order…' : 'Place order & get payment details →'}}</button>
+        </form>
+      </div>
+      <aside class="card summary" *ngIf="cart.lines().length"><h3>Order summary</h3><p class="summary-line" *ngFor="let line of cart.lines()"><span>{{line.packageName}} × {{line.quantity}}<br><small>{{line.productName}}</small></span><span>{{line.currency}} {{line.price * line.quantity | number:'1.0-0'}}</span></p><p class="summary-line total"><span>Total</span><span>{{cart.currency()}} {{cart.total() | number:'1.0-0'}}</span></p><a routerLink="/cart" class="link-button">Edit cart</a></aside>
+    </ng-container>
+
+    <!-- Step 2/3: payment instructions and confirmation -->
+    <ng-container *ngIf="order as o">
+      <div class="form-panel">
+        <div class="order-head"><div><span class="eyebrow">ORDER REFERENCE</span><h3 class="reference">{{o.referenceNumber}}</h3></div><span class="pill status-pill" [attr.data-status]="o.status">{{statusText(o.status)}}</span></div>
+        <p class="amount-due">Amount due: <strong>{{o.currency}} {{o.totalAmount | number:'1.0-0'}}</strong> via <strong>{{label(o.paymentMethod)}}</strong></p>
+
+        <ng-container *ngIf="o.status === 'AWAITING_PAYMENT' || o.status === 'PAYMENT_SUBMITTED'">
+          <h3>3. How to pay</h3>
+          <ng-container *ngIf="o.paymentMethod !== 'BANK'">
+            <ol class="steps" *ngIf="payTo; else notConfigured">
+              <li>Open your <strong>{{label(o.paymentMethod)}}</strong> menu on your phone.</li>
+              <li>Choose <strong>Send money</strong> / <strong>Lipa</strong> and enter the number <strong class="pay-to">{{payTo}}</strong><span *ngIf="settings['payment.bankAccountName']"> ({{settings['payment.bankAccountName']}})</span>.</li>
+              <li>Enter the amount <strong>{{o.currency}} {{o.totalAmount | number:'1.0-0'}}</strong> and use <strong>{{o.referenceNumber}}</strong> as the reference.</li>
+              <li>Confirm with your PIN, then copy the transaction ID from the confirmation SMS into the form below.</li>
+            </ol>
+          </ng-container>
+          <ng-container *ngIf="o.paymentMethod === 'BANK'">
+            <dl class="bank" *ngIf="bankDetails.length; else notConfigured"><ng-container *ngFor="let row of bankDetails"><dt>{{row[0]}}</dt><dd>{{row[1]}}</dd></ng-container><dt>Amount</dt><dd>{{o.currency}} {{o.totalAmount | number:'1.0-0'}}</dd><dt>Payment reference</dt><dd>{{o.referenceNumber}}</dd></dl>
+          </ng-container>
+          <ng-template #notConfigured><div class="status error">Payment details for this method are not published yet. Please <a routerLink="/contact">contact us</a> quoting {{o.referenceNumber}}.</div></ng-template>
+          <p class="muted" *ngIf="settings['payment.instructions']">{{settings['payment.instructions']}}</p>
+
+          <h3>4. Confirm your payment</h3>
+          <p *ngIf="o.status === 'PAYMENT_SUBMITTED'" class="muted">You already submitted reference <strong>{{o.paymentReference}}</strong>. You can update it if it was incorrect.</p>
+          <form #confirm="ngForm" (ngSubmit)="confirmPayment(confirm)" class="form-grid">
+            <label class="field">Transaction ID / bank reference *<input name="paymentReference" [(ngModel)]="confirmation.paymentReference" required minlength="4" maxlength="80" pattern="[A-Za-z0-9 ._/-]+"></label>
+            <label class="field">Phone number used to pay<input name="payerPhone" type="tel" [(ngModel)]="confirmation.payerPhone" maxlength="40"></label>
+            <button class="btn btn-primary full" type="submit" [disabled]="submitting || confirm.invalid">{{submitting ? 'Sending…' : 'I have paid – submit for verification'}}</button>
+          </form>
+        </ng-container>
+        <div *ngIf="o.status === 'PAID'" class="status success">Payment confirmed on {{o.paidAt | date:'medium'}}. Thank you — our team will contact you at {{o.email}} to activate your package.</div>
+        <div *ngIf="o.status === 'CANCELLED' || o.status === 'REFUNDED'" class="status error">This order is {{o.status.toLowerCase()}}. <a routerLink="/contact">Contact us</a> if you have questions.</div>
+        <p class="muted">Keep this link to check your order later: <code>/checkout?ref={{o.referenceNumber}}&amp;email={{o.email}}</code></p>
+      </div>
+      <aside class="card summary"><h3>Items</h3><p class="summary-line" *ngFor="let item of o.items"><span>{{item.packageName}} × {{item.quantity}}<br><small>{{item.productName}} · per {{item.billingFrequency.toLowerCase().replace('_',' ')}}</small></span><span>{{o.currency}} {{+item.unitPrice * item.quantity | number:'1.0-0'}}</span></p><p class="summary-line total"><span>Total</span><span>{{o.currency}} {{o.totalAmount | number:'1.0-0'}}</span></p><p class="muted">Billed to {{o.fullName}} · {{o.email}}</p></aside>
+    </ng-container>
+
+    <!-- Existing-order lookup -->
+    <details class="card lookup full" [open]="showLookup || (!order && !cart.lines().length)"><summary>Already placed an order? Find it here</summary><form #find="ngForm" (ngSubmit)="findOrder()" class="form-grid"><label class="field">Order reference *<input name="referenceNumber" [(ngModel)]="lookup.referenceNumber" required maxlength="32" placeholder="ORD-XXXXXXXX"></label><label class="field">Email used *<input name="lookupEmail" type="email" [(ngModel)]="lookup.email" required email maxlength="254"></label><button class="btn btn-outline" type="submit" [disabled]="find.invalid">Find order</button></form></details>
+  </ng-container>
+</div></section>

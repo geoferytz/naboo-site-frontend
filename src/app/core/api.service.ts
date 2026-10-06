@@ -10,6 +10,16 @@ export const PRODUCT_FIELDS = 'id name slug category shortDescription descriptio
 export const PLAN_FIELDS = 'id productId name description price currency billingFrequency customPrice active featured displayOrder userLimit roomLimit productLimit supportLevel features';
 export const SERVICE_FIELDS = 'id name slug shortDescription description imageUrl category priceType startingPrice currency status displayOrder';
 export const LEAD_FIELDS = 'id referenceNumber fullName email phone status assignedUserId notes createdAt';
+export interface OrderItem { id: string; packageId: string; productName: string; packageName: string; billingFrequency: string; unitPrice: string; quantity: number }
+export interface Order { id: string; referenceNumber: string; fullName: string; email: string; phone: string; company?: string; paymentMethod: string; paymentReference?: string; payerPhone?: string; currency: string; totalAmount: string; status: string; notes?: string; createdAt: string; paidAt?: string; items: OrderItem[] }
+export const ORDER_FIELDS = 'id referenceNumber fullName email phone company paymentMethod paymentReference payerPhone currency totalAmount status notes createdAt paidAt items { id packageId productName packageName billingFrequency unitPrice quantity }';
+export const PAYMENT_METHODS = [
+  { key: 'M_PESA', label: 'Vodacom M-Pesa', settingKey: 'payment.vodacomNumber', network: 'Vodacom' },
+  { key: 'TIGO_PESA', label: 'Tigo Pesa (Mixx by Yas)', settingKey: 'payment.tigoNumber', network: 'Tigo' },
+  { key: 'AIRTEL_MONEY', label: 'Airtel Money', settingKey: 'payment.airtelNumber', network: 'Airtel' },
+  { key: 'HALOPESA', label: 'HaloPesa', settingKey: 'payment.halotelNumber', network: 'Halotel' },
+  { key: 'BANK', label: 'Bank transfer', settingKey: 'payment.bankAccountNumber', network: 'Bank' }
+] as const;
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {

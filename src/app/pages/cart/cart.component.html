@@ -1,0 +1,10 @@
+<section class="page-hero"><div class="container"><span class="eyebrow">YOUR CART</span><h1>Review your packages.</h1><p>Adjust quantities, then continue to secure checkout to pay by bank transfer or mobile money.</p></div></section>
+<section class="section"><div class="container cart-layout">
+  <div *ngIf="!cart.lines().length" class="empty cart-empty">Your cart is empty. <a routerLink="/pricing">Browse pricing</a> to choose a package.</div>
+  <ng-container *ngIf="cart.lines().length">
+    <div class="table-wrap cart-table"><table><thead><tr><th>Package</th><th>Billing</th><th>Unit price</th><th>Quantity</th><th>Subtotal</th><th></th></tr></thead><tbody>
+      <tr *ngFor="let line of cart.lines()"><td><strong>{{line.packageName}}</strong><br><small>{{line.productName}}</small></td><td>per {{frequency(line.billingFrequency)}}</td><td>{{line.currency}} {{line.price | number:'1.0-0'}}</td><td><label class="qty">Quantity<input type="number" min="1" max="100" [value]="line.quantity" (change)="cart.setQuantity(line.packageId, +($any($event.target).value))" [attr.aria-label]="'Quantity for ' + line.packageName"></label></td><td>{{line.currency}} {{line.price * line.quantity | number:'1.0-0'}}</td><td><button type="button" class="btn btn-small btn-outline" (click)="cart.remove(line.packageId)">Remove</button></td></tr>
+    </tbody></table></div>
+    <aside class="card summary"><h3>Order summary</h3><p class="summary-line"><span>Packages</span><span>{{cart.count()}}</span></p><p class="summary-line total"><span>Total due now</span><span>{{cart.currency()}} {{cart.total() | number:'1.0-0'}}</span></p><p class="muted">Prices are shown per billing period. Our team confirms activation once payment is verified.</p><a routerLink="/checkout" class="btn btn-primary">Proceed to payment →</a><a routerLink="/pricing" class="btn btn-outline">Add more packages</a><button type="button" class="link-button" (click)="cart.clear()">Clear cart</button></aside>
+  </ng-container>
+</div></section>

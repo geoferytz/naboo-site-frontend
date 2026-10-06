@@ -1,2 +1,4 @@
 .brand-logo{display:block;height:44px;width:auto;object-fit:contain}
 .footer-logo{display:block;height:44px;width:auto;object-fit:contain}
+.cart-link{display:inline-flex;align-items:center;gap:6px}
+.cart-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--wine);color:#fff;font-size:11px;font-weight:800}
