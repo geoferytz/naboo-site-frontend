@@ -6,3 +6,6 @@ ReadMe.txt
 e2e
 test-results
 playwright-report
+deploy.ps1
+.env
+.env.*
